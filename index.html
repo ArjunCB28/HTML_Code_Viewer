@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<head>
+	<title>HTML Analyser</title>
+</head>
+<body>
+	<div class="header">
+		<div class="header-title"><img src="images/html_logo.svg"> <span>&nbsp;Code Viewer</span></div>
+	</div>
+	<div class="container">
+		<div id="info-text">
+			<!-- <p>HTML Code View can be used to view the source code of any web page and analyse the list and count of tags used.</p> -->
+			<div class="image-wrapper"><img src="images/image.jpg"></div>
+			<div class="developed-by-wrapper">
+				<p class="text">Developed by</p>
+				<p class="developer-name">Arjun Chandra Balaji</p>
+				<!-- <a class="developer-name" href="https://www.linkedin.com/in/arjun-chandra-balaji-46b2a3150/" target="_blank">Arjun Chandra Balaji</a> -->
+			</div>
+		</div>
+		<div class="url-input-part">
+			<input id="urlId" type="text" name="" placeholder="enter url example: &quot;https://youtube.com&quot;">
+			<button onclick="ananlyseHtml();">Analyse HTML</button>
+		</div>
+		<div class="source-code-display-part">
+			<div id="code-source" class="code-source">
+				<pre id="xmpTagId"></pre>
+			</div>
+			<div class="tag-display-wrapper">
+				<div  class="tag-display">
+					<table cellpadding="0" cellspacing="0">
+						<thead>
+							<th>Tag Name</th>
+							<th>Count</th>
+						</thead>
+					</table>
+				</div>
+				<div id="tag-display-area" class="tag-display count-scroll-view">
+					<table id="tag-count-table" cellpadding="0" cellspacing="0"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

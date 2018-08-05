@@ -1,45 +1,55 @@
 var htmlData;
 var escapedHtmlData;
 var inputTransition = false;
+var selectedTag;
+//function is called when analyse button is clicked
 var ananlyseHtml = function(){
-	//tbr
-	// $('#urlId').val('https://www.computerhope.com/issues/ch000746.htm');
 	var inputUrl = $('#urlId').val();
+	var urlValidationRegex = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+	if (!urlValidationRegex.test(inputUrl)) { 
+	    window.alert("Enter a valid url");
+	    return;
+	}
+	if(!inputTransition){
+		$('.loading-overlay').css('display','block');
+		$('.url-input-part').css('margin','50px 0px 0px 0px');
+		$('.url-input-part').css('top','0px');
+		$('#info-text').css('display','none');
+	}
+
 	$.ajax({
-		// url:'https://cors-anywhere.herokuapp.com/'+inputUrl,
 		url:'https://cors-proxy.htmldriven.com/?url='+inputUrl,
-		// headers: { 'Access-Control-Allow-Origin': 'file://' },
+		// url:inputUrl,
+		// headers: { 'Access-Control-Allow-Origin': '*' },
 		type:'GET',
 		accept:'application/json',
 		// crossDomain: true,
 		success: function(data){
+			$('.loading-overlay').css('display','none');
+			$('.source-code-display-part').css('visibility','visible');
+			$('.source-code-display-part').css('height','450px');
 			var outputData = data.body;
 			// gives tag break and removes 
 			outputData = outputData.replace(/>/g, ">\n");
 			outputData = outputData.replace(/<\//g, "\n</");
 			outputData = outputData.replace(/^\s*\n/gm, "");
 			htmlData = outputData;
+			//relpaces special character to show it as un-compiled html inside pre tag
 			outputData = outputData.replace(/</g, "&lt;");
 			outputData = outputData.replace(/>/g, "&gt;");
 			escapedHtmlData = outputData;
-
 			var element = document.getElementById("xmpTagId");
 			element.innerHTML = outputData;
 			filterTags(htmlData);
+		},
+		error: function(){
+			$('.loading-overlay').css('display','none');
+			window.alert("Some error occurred while loading the url. Try some other url");
 		}
 	});
-	if(!inputTransition){
-		$('.url-input-part').css('margin','50px 0px 0px 0px');
-		$('.url-input-part').css('top','0px');
-		$('#info-text').css('display','none');
-		setTimeout(function() {
-			$('.source-code-display-part').css('visibility','visible');
-			$('.source-code-display-part').css('height','400px');
-		}, 500);
-	}
 };
 
-
+// used to filter out tags present in html
 var filterTags = function(data){
 	var outputArray = [];
 	var tagFilterRegex = /<([a-z]+)\b/g;
@@ -49,10 +59,11 @@ var filterTags = function(data){
 	groupFilteredTags(outputArray);
 };
 
+// create tag count
 var groupFilteredTags = function(filteredArray){
 	var groupedArray = [];
 	var countTagObj = {};
-	var excludeArray = [];
+	var excludeArray = ['html'];
 	// var excludeArray = ['html','title','script','body','link','head','meta'];
 	if(filteredArray.length === 0){
 		return;
@@ -79,9 +90,9 @@ var createDomElements = function(countTagObj){
 		var row = document.createElement("tr");
 		var column1 = document.createElement("td");
 		var column2 = document.createElement("td");
-		row.setAttribute('id',key);
+		row.setAttribute("id","row-"+key);
 		row.setAttribute('onclick',"selectTag('"+key+"')");
-		column1.textContent = countTagObj[key].tagName;
+		column1.textContent = key;
 		column2.textContent = countTagObj[key].count;
 		row.appendChild(column1);
 		row.appendChild(column2);
@@ -91,8 +102,15 @@ var createDomElements = function(countTagObj){
 	element.appendChild(tableBody);
 };
 
+//function is called when any tag is selected.
 var selectTag = function(tag){
 	console.log(tag);
+	if(selectedTag !== undefined){
+		$('#row-'+selectedTag).css('background-color','white');
+	}
+	selectedTag = tag;
+	$('#row-'+tag).css('background-color','#c6e3ff');
+	console.log('#row-'+tag);
     var outputData = escapedHtmlData.replace(new RegExp("&lt;"+tag+"&gt;", 'g'), '<mark>$&</mark>');
     var xmp = document.createElement("pre");
     var element = document.getElementById("xmpTagId");
@@ -101,5 +119,3 @@ var selectTag = function(tag){
     xmp.innerHTML = outputData;
     element.innerHTML = outputData;
 };
-
-// show loading 

@@ -144,7 +144,7 @@ mark {
     border-bottom: 1px solid #ccc;
 }
 .source-code-display-part .tag-display table tbody tr:hover{
-	background-color: #3b9ff3;
+	background-color: #3b9ff3 !important;
 	cursor: pointer;
 }
 .source-code-display-part .tag-display table tbody tr td:first-child{

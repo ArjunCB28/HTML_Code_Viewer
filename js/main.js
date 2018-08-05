@@ -18,7 +18,8 @@ var ananlyseHtml = function(){
 	}
 
 	$.ajax({
-		url:'https://cors-proxy.htmldriven.com/?url='+inputUrl,
+		url:'https://cors-anywhere.herokuapp.com/'+inputUrl,
+		//url:'https://cors-proxy.htmldriven.com/?url='+inputUrl,
 		// url:inputUrl,
 		// headers: { 'Access-Control-Allow-Origin': '*' },
 		type:'GET',
@@ -28,7 +29,7 @@ var ananlyseHtml = function(){
 			$('.loading-overlay').css('display','none');
 			$('.source-code-display-part').css('visibility','visible');
 			$('.source-code-display-part').css('height','450px');
-			var outputData = data.body;
+			var outputData = data;
 			// gives tag break and removes 
 			outputData = outputData.replace(/>/g, ">\n");
 			outputData = outputData.replace(/<\//g, "\n</");
